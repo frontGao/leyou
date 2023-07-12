@@ -3,8 +3,8 @@ import { getToken, setToken, removeToken } from "@/utils/auth";
 import router, { resetRouter } from "@/router";
 
 const state = {
-    token: getToken("local-token"),
-    localToken: getToken("token"),
+    token: getToken("token"),
+    localToken: getToken("local-token"),
     name: "",
     avatar: "",
     introduction: "",
@@ -64,7 +64,7 @@ const actions = {
     // get user info
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
-            getInfo(state.token)
+            getInfo(state.localToken)
                 .then((response) => {
                     const { data } = response;
 
