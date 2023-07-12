@@ -150,13 +150,19 @@
           label="测试封面图"
           required
         >
-          <Upload v-model="formData.cover" />
+          <Upload
+            :value="formData.cover"
+            @input="uploadCover"
+          />
         </el-form-item>
         <el-form-item
           label="测试缩略图"
           required
         >
-          <Upload v-model="formData.thumbnail" />
+          <Upload
+            :value="formData.thumbnail"
+            @input="uploadThumbnail"
+          />
         </el-form-item>
         <div
           v-for="(item, index) in formData.question"
@@ -310,8 +316,8 @@ export default {
       dialogType: 'create',
       formData: {
         title: '',
-        Cover: "https://bm2-test.oss-cn-beijing.aliyuncs.com/16cjbs_1.png",
-        thumbnail: "https://bm2-test.oss-cn-beijing.aliyuncs.com/16cjbs_1.png",
+        cover: "",
+        thumbnail: "",
         question: [
           {
             topic: '',
@@ -339,8 +345,8 @@ export default {
     dialogVisible() {
       this.formData = {
         title: '',
-        Cover: 'https://bm2-test.oss-cn-beijing.aliyuncs.com/16cjbs_1.png',
-        thumbnail: 'https://bm2-test.oss-cn-beijing.aliyuncs.com/16cjbs_1.png',
+        cover: '',
+        thumbnail: '',
         question: [
           {
             topic: '',
@@ -460,6 +466,15 @@ export default {
         max_score: null,
         min_score: null
       })
+    },
+    // 上传封面图回调
+    uploadCover(url) {
+      console.log(url)
+      this.formData.Cover = url
+    },
+    // 上传缩略图回调
+    uploadThumbnail(url) {
+      this.formData.thumbnail = url
     },
     // 点击确认创建/修改
     onSubmit() {

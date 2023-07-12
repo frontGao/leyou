@@ -1,22 +1,25 @@
 <template>
   <div class="upload-container">
     <el-upload
-      :data="dataObj"
+      :headers="dataObj"
       :multiple="false"
       :show-file-list="false"
       :on-success="handleImageSuccess"
       class="image-uploader"
       drag
-      action="https://httpbin.org/post"
+      action="http://pitaya-admin-api.leyouing.com/api/tools/upload_img"
       style=""
     >
       <i
+        v-if="imageUrl == ''"
         class="el-icon-plus"
         style="font-size: 50px;line-height: 100px;"
       />
-      <div class="image-preview">
+      <div
+        v-else
+        class="image-preview"
+      >
         <div
-          v-show="imageUrl.length === 1"
           class="image-preview-wrapper"
         >
           <img :src="imageUrl">
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import { getToken } from '@/api/qiniu'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'SingleImageUpload',
@@ -46,7 +49,7 @@ export default {
   data() {
     return {
       tempUrl: '',
-      dataObj: { token: '', key: '' }
+      dataObj: { token: getToken('token') }
     }
   },
   computed: {
@@ -61,26 +64,21 @@ export default {
     emitInput(val) {
       this.$emit('input', val)
     },
-    handleImageSuccess() {
-      this.emitInput(this.tempUrl)
-    },
-    beforeUpload() {
-      const _self = this
-      return new Promise((resolve, reject) => {
-        getToken().then(response => {
-          console.log(response, 'asdsad==================')
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(err => {
-          console.log(err)
-          reject(false)
+    handleImageSuccess(data) {
+      if (data.code === 200) {
+        this.$message({
+          message: '上传图片成功！',
+          type: 'success'
         })
-      })
-    }
+        const { url } = data.data
+        this.emitInput(url)
+      } else {
+        this.$message({
+          message: "上传图片失败！",
+          type: 'error'
+        })
+      }
+    },
   }
 }
 </script>
@@ -103,12 +101,12 @@ export default {
             float: left;
         }
         .image-preview {
-            width: 100px;
+            width: 100%;
             height: 100px;
             position: relative;
             border: 1px dashed #d9d9d9;
             float: left;
-            margin-left: 50px;
+            // margin-left: 50px;
             .image-preview-wrapper {
                 position: relative;
                 width: 100%;
