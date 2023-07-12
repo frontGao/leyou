@@ -129,7 +129,6 @@
     </el-card>
     <!-- create/edit modal -->
     <el-dialog
-      v-loading="detailLoading"
       :title="dialogType === 'create' ? '新增测试' : '编辑测试'"
       :visible.sync="dialogVisible"
       width="50%"
@@ -137,6 +136,7 @@
     >
       <el-form
         ref="form"
+        v-loading="detailLoading"
         :model="formData"
         label-width="100px"
       >
@@ -470,7 +470,7 @@ export default {
     // 上传封面图回调
     uploadCover(url) {
       console.log(url)
-      this.formData.Cover = url
+      this.formData.cover = url
     },
     // 上传缩略图回调
     uploadThumbnail(url) {
