@@ -174,7 +174,7 @@
           >
             <el-input
               v-model="item.topic"
-              style="width: 70%"
+              style="width: 65%"
             />
             <label style="margin-left: 10px;">
               总分
@@ -184,6 +184,10 @@
                 style="width: 20%"
               />
             </label>
+            <i
+              class="el-icon-delete"
+              @click="DeleteQuestionTitle(formData.question, index)"
+            />
           </el-form-item>
           <el-form-item
             :label="'题目' + (index + 1) + '选项'"
@@ -196,7 +200,7 @@
             >
               <el-input
                 v-model="val.item"
-                style="width: 70%"
+                style="width: 65%"
               />
               <label style="margin-left: 10px;">
                 分数
@@ -206,6 +210,10 @@
                   style="width: 20%"
                 />
               </label>
+              <i
+                class="el-icon-delete"
+                @click="DeleteQuestionOption(item.item_list, index, key)"
+              />
             </div>
             <i
               class="el-icon-circle-plus"
@@ -213,6 +221,15 @@
             >添加题目{{ index + 1 }}选项</i>
           </el-form-item>
         </div>
+        <el-form-item>
+          <el-button
+            type="primary"
+            style="width: 100%"
+            @click="AddQuestionOption(formData)"
+          >
+            添加题目
+          </el-button>
+        </el-form-item>
         <div
           v-for="(item, index) in formData.result"
           :key="index + 'result'"
@@ -223,7 +240,7 @@
           >
             <el-input
               v-model="item.item"
-              style="width: 45%"
+              style="width: 39%"
             />
             <label style="margin-left: 10px;">
               分数区间
@@ -238,15 +255,19 @@
                 style="width: 20%;margin-left: 10px;"
               />
             </label>
+            <i
+              class="el-icon-delete"
+              @click="DeleteAnswerOption(formData.result, index)"
+            />
           </el-form-item>
         </div>
         <el-form-item>
           <el-button
             type="primary"
             style="width: 100%"
-            @click="AddItem(formData)"
+            @click="AddAnswerOption(formData)"
           >
-            添加题目及答案
+            添加答案
           </el-button>
         </el-form-item>
         <el-form-item>
@@ -449,8 +470,8 @@ export default {
         score: null
       })
     },
-    // 添加题目及答案选项
-    AddItem(data) {
+    // 添加题目
+    AddQuestionOption(data) {
       data.question.push({
         topic: '',
         score: null,
@@ -461,11 +482,26 @@ export default {
           },
         ]
       })
+    },
+    // 删除题目标题
+    DeleteQuestionTitle(data, index) {
+      data.splice(index, 1)
+    },
+    // 删除题目选项
+    DeleteQuestionOption(data, index, key) {
+      data.splice(key, 1)
+    },
+    // 添加答案选项
+    AddAnswerOption(data) {
       data.result.push({
         item: '',
         max_score: null,
         min_score: null
       })
+    },
+    // 删除答案选项
+    DeleteAnswerOption(data, index) {
+      data.splice(index, 1)
     },
     // 上传封面图回调
     uploadCover(url) {
@@ -566,6 +602,12 @@ export default {
 <style lang="scss" scoped>
 .test-admin-wrap{
   margin: 10px;
+  .el-icon-delete{
+    cursor: pointer;
+    display: inline-block;
+    font-size: 30px;
+    margin-left: 10px;
+  }
   .control-wrap{
     margin: 10px 0;
   }
